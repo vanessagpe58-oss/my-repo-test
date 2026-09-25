@@ -1,0 +1,2016 @@
+/*
+ * Harmony Saved Addresses for WooCommerce
+ * Estilos del frontend: selector de checkout y seccion "Mis direcciones".
+ * REDISENO UI/UX — identidad visual premium (morado/violeta), 100% CSS.
+ * No se ha modificado ninguna clase, id, hook ni logica de PHP/JS:
+ * este archivo unicamente cambia la presentacion visual.
+ */
+
+/* ================================================================
+   1. VARIABLES
+   ================================================================ */
+
+:root {
+	/* Paleta */
+	--hsa-primary: #5B1F8A;
+	--hsa-primary-hover: #4A1971;
+	--hsa-grad-start: #5B1F8A;
+	--hsa-grad-end: #5B1F8A;
+	--hsa-gradient: linear-gradient(135deg, var(--hsa-grad-start) 0%, var(--hsa-grad-end) 100%);
+
+	--hsa-text: #2E2458;
+	--hsa-text-light: #6E6A86;
+	--hsa-border: #ECE8F8;
+	--hsa-border-selected: var(--hsa-primary);
+	--hsa-bg-selected: #F5F1FF;
+	--hsa-bg-page: #F7F5FC;
+	--hsa-success: #7E57FF;
+	--hsa-danger: #FF4D6D;
+
+	--hsa-radius: 20px;
+	--hsa-radius-sm: 12px;
+	--hsa-radius-pill: 999px;
+	--hsa-gap: 20px;
+
+	--hsa-shadow: 0 8px 30px rgba(40, 25, 80, 0.06);
+	--hsa-shadow-hover: 0 14px 36px rgba(40, 25, 80, 0.1);
+	--hsa-shadow-btn: 0 10px 24px rgba(110, 62, 244, 0.28);
+
+	--hsa-font: "Plus Jakarta Sans", "Manrope", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--hsa-transition: 200ms ease;
+
+	/* Iconos (inline SVG, se tintan con currentColor via mask) */
+	--hsa-icon-edit: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z'/></svg>");
+	--hsa-icon-trash: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 6h18'/><path d='M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/><path d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/></svg>");
+	--hsa-icon-home: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 9.5 12 3l9 6.5'/><path d='M5 10v10h14V10'/></svg>");
+	--hsa-icon-plus: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 5v14'/><path d='M5 12h14'/></svg>");
+	--hsa-icon-pin: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z'/><circle cx='12' cy='10' r='3'/></svg>");
+	--hsa-icon-ticket: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4Z'/><path d='M13 5v2M13 11v2M13 17v2'/></svg>");
+	--hsa-icon-lock: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='11' width='16' height='9' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>");
+	--hsa-icon-shield: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5Z'/></svg>");
+	--hsa-icon-check: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>");
+	--hsa-icon-notes: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20h9'/><path d='M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z'/></svg>");
+}
+
+.hsa-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	flex: 0 0 auto;
+	background-color: currentColor;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+/* ================================================================
+   2. BASE
+   ================================================================ */
+
+.hsa-address-selector,
+.hsa-account-addresses {
+	font-family: var(--hsa-font);
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.55;
+	color: var(--hsa-text);
+	max-width: 100%;
+	margin-bottom: 28px;
+}
+
+.hsa-address-selector--blocks-source {
+	display: none;
+}
+
+.hsa-panel__title {
+	font-size: 24px;
+	font-weight: 600;
+	margin: 0 0 20px;
+	color: var(--hsa-text);
+	letter-spacing: -0.01em;
+}
+
+.hsa-panel__subtitle {
+	font-size: 18px;
+	font-weight: 600;
+	margin: 22px 0 12px;
+	color: var(--hsa-text);
+}
+
+.hsa-account-intro {
+	color: var(--hsa-text-light);
+	font-size: 14px;
+	margin-bottom: 22px;
+	max-width: 640px;
+}
+
+/* ================================================================
+   3. LISTA Y TARJETAS DE DIRECCION
+   ================================================================ */
+
+.hsa-address-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: var(--hsa-gap);
+	margin-bottom: 18px;
+}
+
+.hsa-address-card {
+	position: relative;
+	display: flex;
+	gap: 14px;
+	align-items: flex-start;
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 24px;
+	cursor: pointer;
+	transition: border-color var(--hsa-transition), box-shadow var(--hsa-transition), transform var(--hsa-transition);
+}
+
+.hsa-address-card:hover,
+.hsa-address-card:focus-visible {
+	border-color: var(--hsa-primary);
+	outline: none;
+	box-shadow: var(--hsa-shadow-hover);
+	transform: translateY(-2px);
+}
+
+.hsa-address-card--default,
+.hsa-address-card.is-selected {
+	border-color: var(--hsa-border-selected);
+	background-color: #fff;
+	box-shadow: 0 0 0 2px var(--hsa-primary), var(--hsa-shadow);
+}
+
+.hsa-address-card__radio {
+	flex: 0 0 auto;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: 2px solid var(--hsa-border);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 2px;
+	transition: border-color var(--hsa-transition);
+}
+
+.hsa-address-card.is-selected .hsa-address-card__radio {
+	border-color: var(--hsa-primary);
+}
+
+.hsa-address-card__radio-dot {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: transparent;
+	transition: background-color var(--hsa-transition);
+}
+
+.hsa-address-card.is-selected .hsa-address-card__radio-dot {
+	background: var(--hsa-primary);
+}
+
+.hsa-address-card__content {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.hsa-address-card__alias {
+	font-weight: 600;
+	font-size: 18px;
+	margin: 0 0 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: var(--hsa-text);
+}
+
+.hsa-badge {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--hsa-primary);
+	background: var(--hsa-bg-selected);
+	border-radius: var(--hsa-radius-pill);
+	padding: 4px 12px;
+	line-height: 1.4;
+}
+
+.hsa-address-card__name {
+	font-weight: 600;
+	font-size: 16px;
+	margin: 0 0 6px;
+	color: var(--hsa-text);
+}
+
+.hsa-address-card__line {
+	margin: 0 0 3px;
+	font-size: 14px;
+	color: var(--hsa-text-light);
+}
+
+.hsa-address-card__phone {
+	margin-top: 8px;
+}
+
+.hsa-address-card__selected-flag {
+	display: none;
+	align-items: center;
+	gap: 8px;
+	margin: 14px 0 0;
+	padding-top: 14px;
+	border-top: 1px solid var(--hsa-border);
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--hsa-primary);
+}
+
+.hsa-address-card--default .hsa-address-card__selected-flag,
+.hsa-address-card.is-selected .hsa-address-card__selected-flag {
+	display: flex;
+}
+
+.hsa-address-card__selected-flag::before {
+	content: "";
+	-webkit-mask-image: var(--hsa-icon-home);
+	mask-image: var(--hsa-icon-home);
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background-color: currentColor;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-position: center;
+	mask-position: center;
+}
+
+.hsa-address-card__actions {
+	margin-top: 14px;
+	padding-top: 14px;
+	border-top: 1px solid var(--hsa-border);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 18px;
+}
+
+/* ================================================================
+   4. BOTONES
+   ================================================================ */
+
+.hsa-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	font-size: 15px;
+	font-family: var(--hsa-font);
+	border-radius: var(--hsa-radius-sm);
+	cursor: pointer;
+	border: 1px solid transparent;
+	padding: 12px 22px;
+	font-weight: 600;
+	line-height: 1.3;
+	transition: background-color var(--hsa-transition), border-color var(--hsa-transition),
+		box-shadow var(--hsa-transition), transform var(--hsa-transition), filter var(--hsa-transition);
+}
+
+.hsa-btn--primary {
+	background: var(--hsa-gradient);
+	border-color: transparent;
+	color: #fff;
+	box-shadow: var(--hsa-shadow-btn);
+}
+
+.hsa-btn--primary:hover {
+	filter: brightness(0.88);
+	transform: translateY(-1px);
+	box-shadow: 0 16px 32px rgba(110, 62, 244, 0.45);
+	color: #ffffff;
+}
+
+.hsa-btn--primary:focus-visible {
+	filter: brightness(0.92);
+	outline: 3px solid rgba(110, 62, 244, 0.45);
+	outline-offset: 2px;
+}
+
+.hsa-btn--secondary {
+	background: #fff;
+	border-color: var(--hsa-border);
+	color: var(--hsa-text);
+}
+
+.hsa-btn--secondary:hover {
+	border-color: var(--hsa-primary);
+	color: var(--hsa-primary);
+}
+
+.hsa-btn--large {
+	width: 100%;
+	height: 56px;
+	padding: 0 24px;
+	border-radius: var(--hsa-radius);
+	font-size: 16px;
+	margin-top: 10px;
+}
+
+.hsa-btn--large::before {
+	content: "";
+	-webkit-mask-image: var(--hsa-icon-pin);
+	mask-image: var(--hsa-icon-pin);
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background-color: currentColor;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-position: center;
+	mask-position: center;
+}
+
+.hsa-btn--link {
+	background: transparent;
+	border: 1px dashed var(--hsa-border);
+	color: var(--hsa-primary);
+	width: 100%;
+	padding: 16px 20px;
+	border-radius: var(--hsa-radius);
+	font-size: 15px;
+	text-decoration: none;
+	margin-bottom: 18px;
+}
+
+.hsa-btn--link::before {
+	content: "";
+	-webkit-mask-image: var(--hsa-icon-plus);
+	mask-image: var(--hsa-icon-plus);
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background-color: currentColor;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-position: center;
+	mask-position: center;
+}
+
+.hsa-btn--link:hover {
+	background: var(--hsa-bg-selected);
+	border-color: var(--hsa-primary);
+	border-style: dashed;
+}
+
+.hsa-btn--text {
+	background: transparent;
+	border: none;
+	color: var(--hsa-text-light);
+	padding: 6px 0;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.hsa-btn--text:hover {
+	color: var(--hsa-primary);
+	background-color: rgba(34, 113, 177, 0.08);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.hsa-address-card__actions .hsa-btn--text[data-hsa-action="edit"]::before {
+	content: "";
+	-webkit-mask-image: var(--hsa-icon-edit);
+	mask-image: var(--hsa-icon-edit);
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	background-color: currentColor;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-position: center;
+	mask-position: center;
+}
+
+.hsa-address-card__actions .hsa-btn--text[data-hsa-action="delete"]::before {
+	content: "";
+	-webkit-mask-image: var(--hsa-icon-trash);
+	mask-image: var(--hsa-icon-trash);
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	background-color: currentColor;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-position: center;
+	mask-position: center;
+}
+
+.hsa-btn--danger {
+	color: var(--hsa-danger);
+}
+
+.hsa-btn--danger:hover {
+	color: #E0334F;
+}
+
+/* ================================================================
+   5. CHECKBOX Y NOTAS
+   ================================================================ */
+
+.hsa-checkbox-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 18px 0;
+	cursor: pointer;
+	font-size: 15px;
+	color: var(--hsa-text);
+}
+
+.hsa-checkbox-row input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 22px;
+	height: 22px;
+	border: 2px solid var(--hsa-border);
+	border-radius: 7px;
+	background: #fff;
+	cursor: pointer;
+	position: relative;
+	flex: 0 0 auto;
+	transition: background-color var(--hsa-transition), border-color var(--hsa-transition);
+}
+
+.hsa-checkbox-row input[type="checkbox"]:checked {
+	background: var(--hsa-gradient);
+	border-color: transparent;
+}
+
+.hsa-checkbox-row input[type="checkbox"]:checked::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	-webkit-mask-image: var(--hsa-icon-check);
+	mask-image: var(--hsa-icon-check);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: 70%;
+	mask-size: 70%;
+	-webkit-mask-position: center;
+	mask-position: center;
+	background-color: #fff;
+}
+
+.hsa-checkbox-row input[type="checkbox"]:focus-visible {
+	outline: 3px solid rgba(110, 62, 244, 0.25);
+	outline-offset: 2px;
+}
+
+.hsa-login-prompt {
+	font-size: 15px;
+	margin: 6px 0;
+	color: var(--hsa-text);
+}
+
+.hsa-login-prompt a {
+	color: var(--hsa-primary);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.hsa-login-prompt a:hover {
+	text-decoration: underline;
+}
+
+.hsa-login-prompt--secondary {
+	color: var(--hsa-text-light);
+}
+
+.hsa-hint {
+	color: var(--hsa-text-light);
+	font-size: 14px;
+}
+
+.hsa-status-msg {
+	margin-top: 12px;
+	font-weight: 600;
+	font-size: 14px;
+	min-height: 1.4em;
+}
+
+.hsa-status-msg.is-error {
+	color: var(--hsa-danger);
+}
+
+.hsa-status-msg.is-success {
+	color: var(--hsa-success);
+}
+
+.hsa-empty-state {
+	color: var(--hsa-text-light);
+	font-size: 15px;
+}
+
+/* ================================================================
+   6. MODAL
+   ================================================================ */
+
+.hsa-modal-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(46, 36, 88, 0.45);
+	backdrop-filter: blur(2px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100000;
+	padding: 16px;
+}
+
+.hsa-modal-overlay[hidden] {
+	display: none;
+}
+
+.hsa-modal {
+	background: #fff;
+	width: 100%;
+	max-width: 640px;
+	max-height: 90vh;
+	border-radius: var(--hsa-radius);
+	overflow-y: auto;
+	box-shadow: 0 24px 60px rgba(40, 25, 80, 0.22);
+	font-family: var(--hsa-font);
+}
+
+.hsa-modal__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 24px 28px;
+	border-bottom: 1px solid var(--hsa-border);
+	position: sticky;
+	top: 0;
+	background: #fff;
+	z-index: 1;
+	border-radius: var(--hsa-radius) var(--hsa-radius) 0 0;
+}
+
+.hsa-modal__header h3 {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--hsa-text);
+}
+
+.hsa-modal__close {
+	background: var(--hsa-bg-page);
+	border: none;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	font-size: 20px;
+	line-height: 1;
+	cursor: pointer;
+	color: var(--hsa-text-light);
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color var(--hsa-transition), color var(--hsa-transition);
+}
+
+.hsa-modal__close:hover {
+	background: var(--hsa-bg-selected);
+	color: var(--hsa-primary);
+}
+
+.hsa-modal__body {
+	padding: 28px;
+}
+
+/* ================================================================
+   7. FORMULARIO
+   ================================================================ */
+
+.hsa-form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 18px;
+}
+
+.hsa-field {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+}
+
+.hsa-field--full {
+	grid-column: 1 / -1;
+}
+
+.hsa-field label {
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--hsa-text);
+}
+
+.hsa-field input[type="text"],
+.hsa-field input[type="tel"],
+.hsa-field input[type="email"],
+.hsa-field select,
+.hsa-field textarea {
+	font-size: 15px;
+	font-family: var(--hsa-font);
+	padding: 13px 16px;
+	border: 1.5px solid var(--hsa-border);
+	border-radius: var(--hsa-radius-sm);
+	width: 100%;
+	box-sizing: border-box;
+	background: #fff;
+	color: var(--hsa-text);
+	transition: border-color var(--hsa-transition), box-shadow var(--hsa-transition);
+}
+
+.hsa-field input::placeholder,
+.hsa-field textarea::placeholder {
+	color: #A6A2BC;
+}
+
+.hsa-field input:focus,
+.hsa-field select:focus,
+.hsa-field textarea:focus {
+	outline: none;
+	border-color: var(--hsa-primary);
+	box-shadow: 0 0 0 4px rgba(110, 62, 244, 0.12);
+}
+
+.hsa-field input.hsa-field--invalid,
+.hsa-field select.hsa-field--invalid {
+	border-color: var(--hsa-danger);
+}
+
+.hsa-form-error {
+	background: #FFF0F3;
+	color: var(--hsa-danger);
+	border-radius: var(--hsa-radius-sm);
+	padding: 14px 18px;
+	margin: 18px 0 0;
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.hsa-form-error[hidden] {
+	display: none;
+}
+
+.hsa-form-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	margin-top: 26px;
+}
+
+.hsa-form-actions .hsa-btn {
+	width: auto;
+}
+
+/* ================================================================
+   8. RESPONSIVE (selector de direcciones)
+   ================================================================ */
+
+@media (max-width: 600px) {
+	.hsa-address-list {
+		grid-template-columns: 1fr;
+	}
+
+	.hsa-form-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.hsa-modal__body {
+		padding: 20px;
+	}
+
+	.hsa-form-actions {
+		flex-direction: column-reverse;
+	}
+
+	.hsa-form-actions .hsa-btn {
+		width: 100%;
+	}
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+	.hsa-address-list {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* ================================================================
+   9. CHECKOUT NATIVO DE WOOCOMMERCE
+   Reviste visualmente el checkout clasico (coupon, resumen de pedido,
+   totales, boton de pago, aviso de privacidad y notas del pedido).
+   Solo se usan selectores nativos de WooCommerce: ninguna clase, id
+   ni hook del plugin ni del core se modifica, unicamente su estilo.
+   ================================================================ */
+
+body.woocommerce-checkout .woocommerce {
+	font-family: var(--hsa-font);
+	color: var(--hsa-text);
+}
+
+body.woocommerce-checkout .woocommerce-notices-wrapper:empty {
+	display: none;
+}
+
+body.woocommerce-checkout h1.entry-title,
+body.woocommerce-checkout .page-title {
+	font-family: var(--hsa-font);
+	font-size: 42px;
+	font-weight: 700;
+	color: var(--hsa-text);
+	letter-spacing: -0.02em;
+}
+
+/* ---------- Aviso de cupon ---------- */
+
+body.woocommerce-checkout .woocommerce-form-coupon-toggle {
+	margin-bottom: 16px;
+}
+
+body.woocommerce-checkout .woocommerce-form-coupon-toggle .woocommerce-info,
+body.woocommerce-checkout .woocommerce > .woocommerce-info {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 20px 26px;
+	margin: 0 0 16px;
+	list-style: none;
+	color: var(--hsa-text);
+	font-size: 15px;
+}
+
+body.woocommerce-checkout .woocommerce-form-coupon-toggle .woocommerce-info::before,
+body.woocommerce-checkout .woocommerce > .woocommerce-info::before {
+	content: "";
+	flex: 0 0 auto;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: var(--hsa-bg-selected);
+	-webkit-mask-image: none;
+	mask-image: none;
+	position: relative;
+}
+
+body.woocommerce-checkout .woocommerce-form-coupon-toggle .woocommerce-info::after,
+body.woocommerce-checkout .woocommerce > .woocommerce-info::after {
+	content: "";
+	position: absolute;
+	margin-left: 10px;
+	width: 16px;
+	height: 16px;
+	background-color: var(--hsa-primary);
+	-webkit-mask-image: var(--hsa-icon-ticket);
+	mask-image: var(--hsa-icon-ticket);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+body.woocommerce-checkout .woocommerce > .woocommerce-info::before {
+	background: var(--hsa-bg-selected);
+}
+
+/* Mensaje de exito al aplicar cupon */
+body.woocommerce-checkout .woocommerce-message {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 20px 26px;
+	margin: 0 0 16px;
+	list-style: none;
+	color: var(--hsa-text);
+	font-size: 15px;
+}
+
+body.woocommerce-checkout .woocommerce-message::before {
+	content: "";
+	flex: 0 0 auto;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: var(--hsa-gradient);
+	-webkit-mask-image: var(--hsa-icon-check);
+	mask-image: var(--hsa-icon-check);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: 45%;
+	mask-size: 45%;
+	-webkit-mask-position: center;
+	mask-position: center;
+	background-color: var(--hsa-success);
+	-webkit-mask-composite: source-over;
+}
+
+body.woocommerce-checkout .woocommerce-message a.button {
+	background: var(--hsa-gradient);
+	color: #fff;
+	border-radius: var(--hsa-radius-sm);
+	padding: 10px 18px;
+	font-weight: 600;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+body.woocommerce-checkout .checkout_coupon.woocommerce-form-coupon {
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 22px 26px;
+	margin-bottom: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: flex-end;
+}
+
+body.woocommerce-checkout .checkout_coupon.woocommerce-form-coupon p {
+	margin: 0;
+}
+
+body.woocommerce-checkout .checkout_coupon .form-row {
+	flex: 1 1 220px;
+}
+
+body.woocommerce-checkout .checkout_coupon input#coupon_code {
+	width: 100%;
+	font-family: var(--hsa-font);
+	font-size: 15px;
+	padding: 13px 16px;
+	border: 1.5px solid var(--hsa-border);
+	border-radius: var(--hsa-radius-sm);
+	box-sizing: border-box;
+}
+
+body.woocommerce-checkout .checkout_coupon input#coupon_code:focus {
+	outline: none;
+	border-color: var(--hsa-primary);
+	box-shadow: 0 0 0 4px rgba(110, 62, 244, 0.12);
+}
+
+body.woocommerce-checkout .checkout_coupon button[name="apply_coupon"] {
+	background: var(--hsa-gradient);
+	color: #fff;
+	border: none;
+	border-radius: var(--hsa-radius-sm);
+	padding: 13px 24px;
+	font-weight: 600;
+	font-size: 15px;
+	cursor: pointer;
+	transition: filter var(--hsa-transition), transform var(--hsa-transition);
+}
+
+body.woocommerce-checkout .checkout_coupon button[name="apply_coupon"]:hover {
+	filter: brightness(1.05);
+	transform: translateY(-1px);
+}
+
+/* ---------- Layout de dos columnas con igual altura ---------- */
+
+body.woocommerce-checkout {
+	background: var(--hsa-bg-page);
+}
+
+body.woocommerce-checkout .woocommerce-checkout.woocommerce-form,
+body.woocommerce-checkout form.checkout.woocommerce-checkout {
+	display: grid;
+	grid-template-columns: auto!important;
+	gap: 28px;
+	align-items: stretch;
+}
+
+.woocommerce.woocommerce-checkout form.checkout.woocommerce-checkout:after {
+	content: none;
+	display: none;
+}
+
+body.woocommerce-checkout #customer_details {
+	grid-column: 1;
+	grid-row: 1 / span 2;
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 32px;
+	height: 100%;
+	box-sizing: border-box;
+	float: none;
+	width: 100% !important;
+	margin: 0;
+	display: flex !important;
+	gap: 20px;
+}
+
+body.woocommerce-checkout #customer_details .col-1,
+body.woocommerce-checkout #customer_details .col-2 {
+	float: none;
+	width: 50% !important;
+	margin: 0;
+	padding: 0;
+}
+
+body.woocommerce-checkout #order_review {
+	float: none;
+	width: 100%;
+	margin: 0;
+}
+
+body.woocommerce-checkout #order_review,
+body.woocommerce-checkout #order_review_heading {
+	grid-column: 2;
+	grid-row: 1 / span 2;
+}
+
+body.woocommerce-checkout #order_review {
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 32px;
+	height: 100%;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+}
+
+body.woocommerce-checkout #order_review_heading {
+	font-size: 24px;
+	font-weight: 600;
+	color: var(--hsa-text);
+	margin: 0 0 16px;
+}
+
+/* Campo "Informacion adicional" fuera de las dos tarjetas: ocupa el ancho completo */
+body.woocommerce-checkout .woocommerce-additional-fields {
+	grid-column: 1;
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 28px 32px;
+	margin-top: 8px;
+}
+
+body.woocommerce-checkout .woocommerce-additional-fields > h3 {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--hsa-text);
+	margin: 0 0 18px;
+}
+
+body.woocommerce-checkout .woocommerce-additional-fields > h3::before {
+	content: "";
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: var(--hsa-bg-selected);
+	flex: 0 0 auto;
+}
+
+body.woocommerce-checkout #order_comments {
+	font-family: var(--hsa-font);
+	font-size: 15px;
+	padding: 16px 18px;
+	border: 1.5px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	width: 100%;
+	box-sizing: border-box;
+	min-height: 110px;
+	resize: vertical;
+	color: var(--hsa-text);
+	transition: border-color var(--hsa-transition), box-shadow var(--hsa-transition);
+}
+
+body.woocommerce-checkout #order_comments:focus {
+	outline: none;
+	border-color: var(--hsa-primary);
+	box-shadow: 0 0 0 4px rgba(110, 62, 244, 0.12);
+}
+
+body.woocommerce-checkout #order_comments::placeholder {
+	color: #A6A2BC;
+}
+
+/* ---------- Tabla de productos (resumen del pedido) ---------- */
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table {
+	border: none;
+	border-collapse: collapse;
+	width: 100%;
+	background: transparent;
+	font-size: 15px;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table thead th {
+	border: none;
+	border-bottom: 1px solid var(--hsa-border);
+	padding: 0 0 14px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--hsa-text);
+	text-align: left;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table thead th.product-total {
+	text-align: right;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tbody,
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot {
+	border: none;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item {
+	border: none;
+	border-bottom: 1px solid var(--hsa-border);
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item td {
+	border: none;
+	padding: 18px 0;
+	color: var(--hsa-text);
+	vertical-align: middle;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item td.product-name {
+	font-weight: 500;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item .hsa-review-order-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item .hsa-review-order-item__image-wrap {
+	flex: 0 0 56px;
+	width: 56px;
+	height: 56px;
+	overflow: hidden;
+	border-radius: 8px;
+	background: #f6f6f9;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item .hsa-review-order-item__image-wrap img.hsa-review-order-item__image,
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item .hsa-review-order-item__image-wrap img {
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: auto;
+	display: block;
+	object-fit: cover;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item .hsa-review-order-item__text {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item td.product-name .product-quantity {
+	color: var(--hsa-text-light);
+	font-weight: 500;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item td.product-total {
+	text-align: right;
+	font-weight: 600;
+}
+
+/* ---------- Totales ---------- */
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot tr {
+	border: none;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot th,
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot td {
+	border: none;
+	border-bottom: 1px solid var(--hsa-border);
+	padding: 14px 0;
+	font-size: 15px;
+	text-align: right;
+	color: var(--hsa-text-light);
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot th {
+	text-align: left;
+	font-weight: 500;
+	color: var(--hsa-text-light);
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot .cart-discount td {
+	color: var(--hsa-success);
+	font-weight: 600;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot .order-total {
+	border: none;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot .order-total th,
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot .order-total td {
+	border: none;
+	background: #F5F1FF;
+	padding: 18px 20px;
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--hsa-text);
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot .order-total th {
+	border-radius: var(--hsa-radius-sm) 0 0 var(--hsa-radius-sm);
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot .order-total td {
+	border-radius: 0 var(--hsa-radius-sm) var(--hsa-radius-sm) 0;
+}
+
+body.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot .order-total .woocommerce-Price-amount {
+	font-weight: 700;
+}
+
+/* ---------- Metodos de envio y pago ---------- */
+
+body.woocommerce-checkout ul#shipping_method,
+body.woocommerce-checkout .woocommerce-shipping-methods {
+	list-style: none;
+	margin: 4px 0 18px;
+	padding: 0;
+}
+
+body.woocommerce-checkout ul.wc_payment_methods {
+	list-style: none;
+	margin: 20px 0 0;
+	padding: 0;
+	border-top: 1px solid var(--hsa-border);
+	padding-top: 18px;
+}
+
+body.woocommerce-checkout ul.wc_payment_methods li.wc_payment_method {
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius-sm);
+	padding: 14px 16px;
+	margin-bottom: 10px;
+	transition: border-color var(--hsa-transition), background-color var(--hsa-transition);
+}
+
+body.woocommerce-checkout ul.wc_payment_methods li.wc_payment_method label {
+	font-weight: 600;
+	color: var(--hsa-text);
+	font-size: 15px;
+}
+
+body.woocommerce-checkout ul.wc_payment_methods li.wc_payment_method input[type="radio"] {
+	accent-color: var(--hsa-primary);
+	width: 18px;
+	height: 18px;
+	margin-right: 8px;
+}
+
+body.woocommerce-checkout ul.wc_payment_methods li.wc_payment_method .payment_box {
+	background: var(--hsa-bg-page);
+	border-radius: var(--hsa-radius-sm);
+	font-size: 14px;
+	color: var(--hsa-text-light);
+}
+
+/* ---------- Aviso de privacidad ---------- */
+
+body.woocommerce-checkout .woocommerce-privacy-policy-text {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	background: #fff;
+	border: 1px solid var(--hsa-border);
+	border-radius: var(--hsa-radius);
+	box-shadow: var(--hsa-shadow);
+	padding: 22px 26px;
+	margin: 20px 0;
+	font-size: 14px;
+	color: var(--hsa-text-light);
+	line-height: 1.6;
+}
+
+body.woocommerce-checkout .woocommerce-privacy-policy-text::before {
+	content: "";
+	flex: 0 0 auto;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: var(--hsa-bg-selected);
+	background-color: var(--hsa-bg-selected);
+	-webkit-mask-image: none;
+	mask-image: none;
+	position: relative;
+}
+
+body.woocommerce-checkout .woocommerce-privacy-policy-text p {
+	margin: 0;
+	position: relative;
+}
+
+body.woocommerce-checkout .woocommerce-privacy-policy-text a {
+	color: var(--hsa-primary);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+body.woocommerce-checkout .woocommerce-privacy-policy-text a:hover {
+	text-decoration: underline;
+}
+
+body.woocommerce-checkout .woocommerce-terms-and-conditions-wrapper {
+	margin: 16px 0;
+	font-size: 14px;
+}
+
+/* ---------- Boton "Realizar el pedido" ---------- */
+
+body.woocommerce-checkout #place_order {
+	width: 100%;
+	height: 56px;
+	border-radius: var(--hsa-radius);
+	background: var(--hsa-gradient);
+	color: #fff;
+	font-family: var(--hsa-font);
+	font-size: 16px;
+	font-weight: 700;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 14px 30px rgba(110, 62, 244, 0.3);
+	transition: transform var(--hsa-transition), box-shadow var(--hsa-transition), filter var(--hsa-transition);
+	margin-top: 18px;
+	position: relative;
+	padding-left: 44px;
+}
+
+body.woocommerce-checkout #place_order::before {
+	content: "";
+	position: absolute;
+	left: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 18px;
+	height: 18px;
+	background-color: #fff;
+	-webkit-mask-image: var(--hsa-icon-lock);
+	mask-image: var(--hsa-icon-lock);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+body.woocommerce-checkout #place_order:hover {
+	filter: brightness(1.05);
+	transform: translateY(-2px);
+	box-shadow: 0 18px 36px rgba(110, 62, 244, 0.36);
+}
+
+body.woocommerce-checkout .place-order {
+	padding: 0;
+	background: transparent;
+	border: none;
+}
+
+/* Sombrero (icono) generico para tarjetas informativas: escudo en privacidad */
+body.woocommerce-checkout .woocommerce-privacy-policy-text::before {
+	background-color: var(--hsa-bg-selected);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+	body.woocommerce-checkout .woocommerce-checkout.woocommerce-form,
+	body.woocommerce-checkout form.checkout.woocommerce-checkout,
+	body.woocommerce-checkout .hsa-checkout-row {
+		grid-template-columns: 1fr !important;
+	}
+
+	body.woocommerce-checkout #customer_details,
+	body.woocommerce-checkout #order_review,
+	body.woocommerce-checkout #order_review_heading,
+	body.woocommerce-checkout .hsa-checkout-col--payment,
+	body.woocommerce-checkout .woocommerce-additional-fields {
+		grid-column: 1 !important;
+		grid-row: auto !important;
+	}
+
+	body.woocommerce-checkout #customer_details {
+		flex-direction: column;
+	}
+
+	body.woocommerce-checkout #customer_details .col-1,
+	body.woocommerce-checkout #customer_details .col-2 {
+		width: 100% !important;
+	}
+
+	body.woocommerce-checkout #order_review,
+	body.woocommerce-checkout #order_review_heading {
+		grid-row: auto;
+	}
+}
+
+@media (max-width: 640px) {
+	body.woocommerce-checkout h1.entry-title,
+	body.woocommerce-checkout .page-title {
+		font-size: 30px;
+	}
+
+	body.woocommerce-checkout #customer_details,
+	body.woocommerce-checkout #order_review,
+	body.woocommerce-checkout .woocommerce-additional-fields {
+		padding: 22px;
+	}
+
+	body.woocommerce-checkout .checkout_coupon.woocommerce-form-coupon {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	body.woocommerce-checkout .checkout_coupon button[name="apply_coupon"] {
+		width: 100%;
+	}
+}
+
+@media (max-width: 480px) {
+	body.woocommerce-checkout .woocommerce-checkout-review-order-table thead {
+		display: none;
+	}
+
+	body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item td {
+		display: block;
+		padding: 4px 0;
+	}
+
+	body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item td.product-total {
+		text-align: left;
+		font-size: 16px;
+		padding-bottom: 16px;
+	}
+
+	body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item .hsa-review-order-item {
+		flex-direction: row;
+		gap: 10px;
+	}
+
+	body.woocommerce-checkout .woocommerce-checkout-review-order-table .cart_item .hsa-review-order-item__image-wrap {
+		flex-basis: 44px;
+		width: 44px;
+		height: 44px;
+	}
+}
+/* ================================================================
+   Confirmación de pedido (Thank You Page) — identidad visual Harmony
+   ================================================================ */
+.hsa-custom-thankyou-page .entry-title,
+.hsa-custom-thankyou-page .page-title,
+.hsa-custom-thankyou-page .woocommerce-order > .woocommerce-notice:not(.hsa-order-failed *),
+.hsa-custom-thankyou-page .woocommerce-order-overview,
+.hsa-custom-thankyou-page .woocommerce-order-details,
+.hsa-custom-thankyou-page .woocommerce-customer-details {
+	display: none !important;
+}
+
+.hsa-custom-thankyou-page .site-content,
+.hsa-custom-thankyou-page .content-area,
+.hsa-custom-thankyou-page .entry-content,
+.hsa-custom-thankyou-page .woocommerce {
+	max-width: none;
+	width: 100%;
+}
+
+.hsa-thankyou {
+	/* Paleta oficial del sitio, usada exclusivamente dentro de la pagina
+	   de confirmacion de pedido. No afecta al resto del plugin. */
+	--hsa-ty-grad-1: #5C1ACF;
+	--hsa-ty-grad-2: #7E3AF2;
+	--hsa-ty-grad-3: #A855F7;
+	--hsa-ty-gradient: linear-gradient(135deg, var(--hsa-ty-grad-1) 0%, var(--hsa-ty-grad-2) 55%, var(--hsa-ty-grad-3) 100%);
+	--hsa-ty-bg: #FFFFFF;
+	--hsa-ty-bg-alt: #FAF8FF;
+	--hsa-ty-border: #ECE8F8;
+	--hsa-ty-ink: #17172F;
+	--hsa-ty-muted: #666666;
+	--hsa-ty-purple-icon: #7E3AF2;
+	--hsa-ty-green: #17A34A;
+	--hsa-ty-green-bg: #E7F7ED;
+	--hsa-ty-radius-lg: 22px;
+	--hsa-ty-radius-md: 18px;
+	--hsa-ty-shadow: 0 10px 34px rgba(92, 26, 207, 0.08);
+	--hsa-ty-transition: 250ms ease;
+
+	/* El contenedor no pinta fondo propio: hereda el fondo del tema activo. */
+	background: transparent !important;
+	background-image: none !important;
+	color: var(--hsa-ty-ink);
+	font-family: inherit;
+	margin: 0 calc(50% - 50vw);
+	min-height: 70vh;
+	padding: 56px 24px 80px;
+}
+
+/* ---------- Encabezado centrado ---------- */
+
+.hsa-ty-header {
+	text-align: center;
+	max-width: 640px;
+	margin: 0 auto 48px;
+}
+
+.hsa-ty-header__icon {
+	width: 88px;
+	height: 88px;
+	margin: 0 auto 24px;
+}
+
+.hsa-ty-header__icon svg {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+.hsa-ty-header__icon circle {
+	fill: var(--hsa-ty-grad-2);
+}
+
+.hsa-ty-header__icon .hsa-ty-check {
+	fill: none;
+	stroke: #fff;
+	stroke-width: 4.5;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.hsa-ty-header__title {
+	font-size: clamp(28px, 3.6vw, 40px);
+	line-height: 1.2;
+	font-weight: 800;
+	color: var(--hsa-ty-ink);
+	margin: 0 0 14px;
+}
+
+.hsa-ty-header__subtitle {
+	font-size: clamp(16px, 1.8vw, 18px);
+	line-height: 1.6;
+	color: var(--hsa-ty-muted);
+	margin: 0;
+}
+
+/* ---------- Contenedor general ---------- */
+
+.hsa-ty-container {
+	width: min(1120px, 100%);
+	margin: 0 auto;
+}
+
+/* ---------- Tarjeta de informacion (3 columnas) ---------- */
+
+.hsa-ty-infocard {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	background: var(--hsa-ty-bg);
+	border: 1px solid var(--hsa-ty-border);
+	border-radius: var(--hsa-ty-radius-lg);
+	box-shadow: var(--hsa-ty-shadow);
+	overflow: hidden;
+	margin-bottom: 40px;
+}
+
+.hsa-ty-infocard__item {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 24px 26px;
+	border-right: 1px solid var(--hsa-ty-border);
+}
+
+.hsa-ty-infocard__item:last-child {
+	border-right: none;
+}
+
+.hsa-ty-infocard__icon {
+	flex: 0 0 auto;
+	width: 40px;
+	height: 40px;
+	border-radius: 12px;
+	background: var(--hsa-ty-bg-alt);
+	color: var(--hsa-ty-purple-icon);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.hsa-ty-infocard__icon svg {
+	width: 22px;
+	height: 22px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.7;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+}
+
+.hsa-ty-infocard__text {
+	min-width: 0;
+}
+
+.hsa-ty-infocard__text span {
+	display: block;
+	color: var(--hsa-ty-muted);
+	font-size: 13px;
+	margin-bottom: 4px;
+}
+
+.hsa-ty-infocard__text strong {
+	display: block;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--hsa-ty-ink);
+}
+
+.hsa-ty-infocard__email {
+	overflow-wrap: anywhere;
+}
+
+/* ---------- Layout de dos columnas ---------- */
+
+.hsa-ty-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 360px;
+	gap: 28px;
+	align-items: start;
+	margin-bottom: 40px;
+}
+
+.hsa-ty-section-title {
+	font-size: clamp(20px, 2.4vw, 24px);
+	font-weight: 800;
+	color: var(--hsa-ty-ink);
+	margin: 0;
+	padding: 20px 0 18px;
+	border-bottom: 1px solid var(--hsa-ty-border);
+}
+
+/* ---------- Lista de productos ---------- */
+
+.hsa-ty-products {
+	background: var(--hsa-ty-bg);
+	border: 1px solid var(--hsa-ty-border);
+	border-radius: var(--hsa-ty-radius-lg);
+	box-shadow: var(--hsa-ty-shadow);
+	padding: 0 26px 6px;
+}
+
+.hsa-ty-product {
+	display: grid;
+	grid-template-columns: 76px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 20px;
+	padding: 20px 0;
+	border-bottom: 1px solid var(--hsa-ty-border);
+	transition: background-color var(--hsa-ty-transition);
+}
+
+.hsa-ty-product:last-child {
+	border-bottom: none;
+}
+
+.hsa-ty-product__image {
+	width: 76px;
+	height: 76px;
+	border-radius: 14px;
+	background: var(--hsa-ty-bg-alt);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.hsa-ty-product__image img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	margin: 0;
+}
+
+.hsa-ty-product__name {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--hsa-ty-ink);
+	line-height: 1.4;
+}
+
+.hsa-ty-product__qty {
+	flex: 0 0 auto;
+	min-width: 44px;
+	height: 44px;
+	padding: 0 6px;
+	border-radius: 50%;
+	background: var(--hsa-ty-bg-alt);
+	color: var(--hsa-ty-grad-1);
+	font-weight: 800;
+	font-size: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ---------- Columna lateral: resumen y pago ---------- */
+
+.hsa-ty-side {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	position: sticky;
+	top: 32px;
+	align-self: start;
+}
+
+.hsa-ty-summary-card,
+.hsa-ty-payment-card {
+	background: var(--hsa-ty-bg);
+	border: 1px solid var(--hsa-ty-border);
+	border-radius: var(--hsa-ty-radius-lg);
+	box-shadow: var(--hsa-ty-shadow);
+	padding: 26px;
+}
+
+.hsa-ty-summary-card h2 {
+	font-size: 19px;
+	font-weight: 800;
+	color: var(--hsa-ty-ink);
+	margin: 0 0 18px;
+}
+
+.hsa-ty-summary-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 9px 0;
+	font-size: 15px;
+	color: var(--hsa-ty-muted);
+}
+
+.hsa-ty-summary-row span:last-child {
+	color: var(--hsa-ty-ink);
+	font-weight: 600;
+}
+
+.hsa-ty-summary-row--discount span:last-child {
+	color: var(--hsa-ty-green);
+}
+
+.hsa-ty-summary-total {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	background: var(--hsa-ty-bg-alt);
+	border-radius: var(--hsa-ty-radius-md);
+	padding: 16px 18px;
+	margin-top: 14px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--hsa-ty-ink);
+}
+
+.hsa-ty-summary-total strong {
+	font-size: 20px;
+	font-weight: 800;
+}
+
+.hsa-ty-payment-status {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0 0 6px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--hsa-ty-ink);
+}
+
+.hsa-ty-payment-status__icon {
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--hsa-ty-bg-alt);
+	color: var(--hsa-ty-purple-icon);
+	flex: 0 0 auto;
+}
+
+.hsa-ty-payment-status--approved .hsa-ty-payment-status__icon {
+	background: var(--hsa-ty-green-bg);
+	color: var(--hsa-ty-green);
+}
+
+.hsa-ty-payment-status--approved {
+	color: var(--hsa-ty-green);
+}
+
+.hsa-ty-payment-status__icon svg {
+	width: 15px;
+	height: 15px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2.4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.hsa-ty-payment-method {
+	margin: 0;
+	padding-left: 36px;
+	font-size: 15px;
+	color: var(--hsa-ty-muted);
+}
+
+/* ---------- Boton principal ---------- */
+
+.hsa-ty-cta {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	width: 100%;
+	min-height: 58px;
+	border-radius: var(--hsa-ty-radius-md);
+	background: var(--hsa-ty-gradient);
+	color: #fff !important;
+	font-size: 17px;
+	font-weight: 700;
+	text-decoration: none !important;
+	box-shadow: 0 14px 30px rgba(92, 26, 207, 0.25);
+	transition: transform var(--hsa-ty-transition), box-shadow var(--hsa-ty-transition), filter var(--hsa-ty-transition);
+}
+
+.hsa-ty-cta:hover,
+.hsa-ty-cta:focus-visible {
+	color: #fff !important;
+	transform: translateY(-2px);
+	box-shadow: 0 18px 36px rgba(92, 26, 207, 0.32);
+	filter: brightness(1.04);
+}
+
+.hsa-ty-cta__icon {
+	width: 22px;
+	height: 22px;
+	display: flex;
+}
+
+.hsa-ty-cta__icon svg {
+	width: 100%;
+	height: 100%;
+	fill: none;
+	stroke: #fff;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+/* ---------- Pie de pagina ---------- */
+
+.hsa-ty-footer {
+	text-align: center;
+	margin: 22px 0 0;
+	font-size: 13px;
+	color: var(--hsa-ty-muted);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+	.hsa-ty-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.hsa-ty-side {
+		order: 2;
+	}
+
+	.hsa-ty-main {
+		order: 1;
+	}
+}
+
+@media (max-width: 640px) {
+	.hsa-thankyou {
+		padding: 40px 16px 56px;
+	}
+
+	.hsa-ty-header {
+		margin-bottom: 34px;
+	}
+
+	.hsa-ty-header__icon {
+		width: 72px;
+		height: 72px;
+	}
+
+	.hsa-ty-infocard {
+		grid-template-columns: 1fr;
+	}
+
+	.hsa-ty-infocard__item {
+		border-right: none;
+		border-bottom: 1px solid var(--hsa-ty-border);
+	}
+
+	.hsa-ty-infocard__item:last-child {
+		border-bottom: none;
+	}
+
+	.hsa-ty-product {
+		grid-template-columns: 60px minmax(0, 1fr) auto;
+		gap: 14px;
+		padding: 16px 0;
+	}
+
+	.hsa-ty-product__image {
+		width: 60px;
+		height: 60px;
+	}
+
+	.hsa-ty-products {
+		padding: 4px 18px;
+	}
+
+	.hsa-ty-summary-card,
+	.hsa-ty-payment-card {
+		padding: 20px;
+	}
+}
+
+
+/* Resumen fijo durante el desplazamiento en escritorio. */
+.admin-bar .hsa-ty-side {
+	top: 64px;
+}
+
+@media (max-width: 900px) {
+	.hsa-ty-side,
+	.admin-bar .hsa-ty-side {
+		position: static;
+		top: auto;
+	}
+}
+
+
+/* ================================================================
+   Reemplazo de .woocommerce-billing-fields en checkout clásico
+   ================================================================ */
+
+/* Contenedor visualmente oculto (off-screen) para los campos nativos de
+   WooCommerce que el JS sigue utilizando para escribir los valores
+   elegidos por el selector. Mantiene el DOM accesible para selectWoo
+   y para los eventos change/update de WC. */
+.hsa-hidden-fields {
+	position: absolute !important;
+	left: -10000px !important;
+	top: auto !important;
+	width: 1px !important;
+	height: 1px !important;
+	overflow: hidden !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+}
+
+/* Cuando el selector Harmony reemplaza .woocommerce-billing-fields, la
+   segunda columna del checkout queda vacia. La ocultamos y dejamos que
+   la primera columna ocupe el ancho completo para que el selector se
+   vea comodo y centrado. */
+.woocommerce-checkout.hsa-selector-active #customer_details {
+	display: block;
+}
+
+.woocommerce-checkout.hsa-selector-active #customer_details .col-1 {
+	width: 100% !important;
+	float: none !important;
+}
+
+.woocommerce-checkout.hsa-selector-active #customer_details .col-2:empty {
+	display: none !important;
+}
+
+body.woocommerce-checkout .woocommerce-form-coupon-toggle {
+	display: none !important;
+}
+
+
+/* Ajustes checkout Harmony: color de direccion y metodos de pago */
+body.woocommerce-checkout .hsa-address-card:hover,
+body.woocommerce-checkout .hsa-address-card:focus-visible,
+body.woocommerce-checkout .hsa-address-card--default,
+body.woocommerce-checkout .hsa-address-card.is-selected {
+	border-color: #5B1F8A !important;
+}
+body.woocommerce-checkout .hsa-address-card--default,
+body.woocommerce-checkout .hsa-address-card.is-selected {
+	box-shadow: 0 0 0 2px #5B1F8A, var(--hsa-shadow) !important;
+}
+body.woocommerce-checkout .hsa-address-card.is-selected .hsa-address-card__radio {
+	border-color: #5B1F8A !important;
+}
+body.woocommerce-checkout .hsa-address-card.is-selected .hsa-address-card__radio-dot,
+body.woocommerce-checkout .hsa-address-card__selected-flag::before {
+	background-color: #5B1F8A !important;
+}
+body.woocommerce-checkout .hsa-address-card__selected-flag,
+body.woocommerce-checkout .hsa-badge {
+	color: #5B1F8A !important;
+}
+/* El boton se conserva en el DOM para compatibilidad, pero no se muestra. */
+body.woocommerce-checkout [data-hsa-action="use-address"] {
+	display: none !important;
+}
+/* Oculta logos/imagenes de gateways; conserva el texto del metodo. */
+body.woocommerce-checkout ul.wc_payment_methods li.wc_payment_method label img,
+body.woocommerce-checkout .payment_methods .payment_method label img,
+body.woocommerce-checkout .wc_payment_method label svg {
+	display: none !important;
+}
+
+/* Checkout: aviso de privacidad debajo del boton Realizar el pedido. */
+body.woocommerce-checkout #place_order + .woocommerce-privacy-policy-text {
+	margin: 20px 0 0;
+}
+
+/* Checkout: elevar visualmente el boton Realizar el pedido para dar aire antes del aviso de privacidad. */
+body.woocommerce-checkout #place_order {
+    top: -14px !important;
+}
+
+/* El espacio se obtiene elevando el boton, no empujando hacia abajo el aviso. */
+body.woocommerce-checkout #place_order + .woocommerce-privacy-policy-text {
+    margin-top: 0 !important;
+}
+
+/* Confirmacion de pedido: exito en verde y encabezado mas alto/compacto. */
+.hsa-custom-thankyou-page .hsa-thankyou {
+    padding-top: 24px !important;
+}
+.hsa-custom-thankyou-page .hsa-ty-header {
+    margin-top: 0 !important;
+    margin-bottom: 38px !important;
+}
+.hsa-custom-thankyou-page .hsa-ty-header__icon {
+    margin-bottom: 18px !important;
+}
+.hsa-custom-thankyou-page .hsa-ty-header__icon circle {
+    fill: #00A650 !important;
+}
+.hsa-custom-thankyou-page .hsa-ty-header__title {
+    margin-bottom: 10px !important;
+}
+
+@media (max-width: 640px) {
+    .hsa-custom-thankyou-page .hsa-thankyou {
+        padding-top: 24px !important;
+    }
+}
